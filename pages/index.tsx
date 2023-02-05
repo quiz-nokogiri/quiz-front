@@ -17,33 +17,44 @@ const http = axios.create({
 });
 var place = -1;
 const back_num = new Array();
+
+type Quiz = {
+  question: string;
+  answer1: string;
+  answer2: string;
+  correct_answer: string;
+};
+
 export default function Home() {
-  const [fetchedMessage, setFetchedMessage] = useState([""]);
+  // 問題、選択肢1、選択肢2, 答え
+  const [fetchedMessage, setFetchedMessage] = useState<Quiz>();
+
   let get_quiz = async () => {
     // const res = await http.get("/user/1");
     const res = await http.get("/quiz");
     const data = JSON.parse(JSON.stringify(res.data));
-    // const text = new Array(4);
-    const text = new Array(4);
-    // [currentUser, setCurrentUser] = useState<string | null>()
-    text[0] = data.quiz;
-    text[1] = data.answer1;
-    text[2] = data.answer2;
-    text[3] = data.correct_answer;
+
+    setFetchedMessage({
+      question: data.quiz,
+      answer1: data.answer1,
+      answer2: data.answer2,
+      correct_answer: data.correct_answer,
+    });
+
     back_num.push(text);
     place += 1;
     setFetchedMessage(text);
-    if (typeof document !== "undefined") {
-      document.getElementById("answer_T")!.style.display = "none";
+    if (typeof document === "undefined") {
+      return;
     }
-    if (typeof document !== "undefined") {
-      document.getElementById("answer_F")!.style.display = "none";
-    }
-    if (typeof document !== "undefined") {
-      document.getElementById("reload")!.style.display = "none";
-    }
+
+    document.getElementById("answer_T")!.style.display = "none";
+    document.getElementById("answer_F")!.style.display = "none";
+    document.getElementById("reload")!.style.display = "none";
+
     const choice_1 = document.getElementById("choice_1")!;
     const choice_2 = document.getElementById("choice_2")!;
+
     choice_1.style.display = "inline";
     choice_2.style.display = "inline";
   };
@@ -137,6 +148,7 @@ export default function Home() {
   useEffect(() => {
     get_quiz();
   }, []);
+
   return (
     <>
       <div {...handlers} className={styles.entire}>
