@@ -1,7 +1,7 @@
 import axios from "axios";
 import styles from "../styles/Home.module.css";
 // import axios, { AxiosRequestConfig } from "axios";
-import { useEffect, useReducer, useRef, useState } from "react";
+import { useEffect, useMemo, useReducer, useRef, useState } from "react";
 import { useSwipeable } from "react-swipeable";
 // import { text } from "stream/consumers";
 const http = axios.create({
@@ -31,7 +31,7 @@ type Quiz = {
 
 export default function Home() {
   // 問題、選択肢1、選択肢2, 答え
-  const [fetchedMessage, setFetchedMessage] = useState<Quiz>();
+  // const [displayQuiz, setDisplayQuiz] = useState<Quiz>();
   const [quizzes, setQuizzes] = useState<Quiz[]>([]);
 
   const [currentQuizNumber, dispatchCurrentQuizNumber] = useReducer(
@@ -41,14 +41,19 @@ export default function Home() {
           return prev + 1;
         case "decrement":
           return Math.max(prev - 1, 0);
-        case"reset":
+        case "reset":
           return 0;
       }
     },
     0
   );
 
-  let get_quiz = async () => {
+  const displayQuiz = useMemo(
+    () => quizzes[currentQuizNumber],
+    [quizzes, currentQuizNumber]
+  );
+
+  const fetchQuiz = async () => {
     // const res = await http.get("/user/1");
     const res = await http.get("/quiz");
     const data = JSON.parse(JSON.stringify(res.data));
@@ -60,10 +65,7 @@ export default function Home() {
       correct_answer: data.correct_answer,
     };
 
-    setFetchedMessage(quiz);
     setQuizzes((prev) => [...prev, quiz]);
-
-    dispatchCurrentQuizNumber({ type: "increment" });
 
     if (typeof document === "undefined") {
       return;
@@ -79,16 +81,14 @@ export default function Home() {
     choice_1.style.display = "inline";
     choice_2.style.display = "inline";
   };
-  console.log(place);
-  console.log(back_num);
-  let past_quiz = () => {
-    const shown_quiz = new Array(4);
-    shown_quiz[0] = back_num[place - 1][0];
-    shown_quiz[1] = back_num[place - 1][1];
-    shown_quiz[2] = back_num[place - 1][2];
-    shown_quiz[3] = back_num[place - 1][3];
-    console.log(fetchedMessage);
-    setFetchedMessage(shown_quiz);
+
+  const goNext = () => {
+    dispatchCurrentQuizNumber({ type: "increment" });
+    fetchQuiz();
+  };
+
+  const goPrev = () => {
+    dispatchCurrentQuizNumber({ type: "decrement" });
   };
 
   // Note: DOM を参照して、直接いじりたいときは、useRef を使う
@@ -108,7 +108,7 @@ export default function Home() {
     ) {
       return;
     }
-    if (e == fetchedMessage[3]) {
+    if (e == displayQuiz[3]) {
       answerTrueElm.current.style.display = "block";
       answerFalseElm.current.style.display = "none";
       choiceElm1.current.style.display = "none";
@@ -137,29 +137,29 @@ export default function Home() {
           // 正解表示後の右スワイプイベント
         }
         if (event.dir == "Up") {
-          get_quiz();
+          goNext();
         }
       } else {
         // if (p.code =="ArrowLeft" || event.dir=="Left"){
         if (event.dir == "Left") {
           // 左にスワイプしたときに発火するイベント
-          judg_answer(fetchedMessage[1]);
+          judg_answer(displayQuiz[1]);
           // hogehoge()
         }
         // if (event.dir == "Right" || p.code =="ArrowRight"){
         if (event.dir == "Right") {
           // 右にスワイプしたときに発火するイベント
-          judg_answer(fetchedMessage[2]);
+          judg_answer(displayQuiz[2]);
           // hogehoge()
         }
         // if (event.dir == "Up" || p.code =="ArrowDown"){
         if (event.dir == "Up") {
           // past_quiz()
-          get_quiz();
+          goNext();
           // })
         }
         if (event.dir == "Down") {
-          past_quiz();
+          goPrev();
         }
       }
     },
@@ -167,7 +167,8 @@ export default function Home() {
   });
 
   useEffect(() => {
-    get_quiz();
+    fetchQuiz();
+    fetchQuiz();
   }, []);
 
   return (
@@ -186,17 +187,17 @@ export default function Home() {
             <div id="wrap">
               <div className={styles.box}>
                 <h1>
-                  {fetchedMessage[0]}
+                  {displayQuiz.question}
                   <p ref={answerTrueElm}>正解!!</p>
                   <p ref={answerFalseElm}>不正解</p>
                 </h1>
                 <h2 ref={choiceElm1} onClick={(e) => judg_answer(e)}>
-                  ←{fetchedMessage[1]}
+                  ←{displayQuiz.answer1}
                 </h2>
                 <h2 ref={choiceElm2} onClick={(e) => judg_answer(e)}>
-                  {fetchedMessage[2]}→
+                  {displayQuiz.answer2}→
                 </h2>
-                <h2 ref={reloadElm} onClick={() => get_quiz()}>
+                <h2 ref={reloadElm} onClick={() => fetchQuiz()}>
                   next Quiz ↓
                 </h2>
               </div>
