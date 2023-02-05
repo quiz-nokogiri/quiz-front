@@ -30,6 +30,12 @@ type Quiz = {
   correct_answer: string;
 };
 
+enum DisplayState {
+  THINKING,
+  SUCCESS,
+  MISSING,
+}
+
 export default function Home() {
   const [quizzes, setQuizzes] = useState<Quiz[]>([]);
 
@@ -37,17 +43,12 @@ export default function Home() {
     (prev: number, action: { type: "increment" | "decrement" }) => {
       switch (action.type) {
         case "increment":
-          return prev + 1;
+          return Math.min(prev + 1, quizzes.length - 1);
         case "decrement":
           return Math.max(prev - 1, 0);
       }
     },
     0
-  );
-
-  const displayQuiz = useMemo(
-    () => quizzes[currentQuizNumber],
-    [quizzes, currentQuizNumber]
   );
 
   const fetchQuiz = async () => {
@@ -67,19 +68,19 @@ export default function Home() {
   };
 
   // 状態: 問題表示中, 正解表示中, 不正解表示中
-  const [displayState, setDisplayState] = useState<
-    "THINKING" | "SUCCESS" | "MISSING"
-  >("THINKING");
+  const [displayState, setDisplayState] = useState<DisplayState>(
+    DisplayState.THINKING
+  );
 
   const goNext = () => {
     dispatchCurrentQuizNumber({ type: "increment" });
-    setDisplayState("THINKING");
+    setDisplayState(DisplayState.THINKING);
     fetchQuiz();
   };
 
   const goPrev = () => {
     dispatchCurrentQuizNumber({ type: "decrement" });
-    setDisplayState("THINKING");
+    setDisplayState(DisplayState.THINKING);
   };
 
   const judgeAnswer = (quiz: Quiz, answer: 1 | 2) => {
@@ -90,21 +91,26 @@ export default function Home() {
     }
   };
 
+  const displayQuiz = useMemo(
+    () => quizzes[currentQuizNumber],
+    [quizzes, currentQuizNumber]
+  );
+
   const handlers = useSwipeable({
     onSwiped: (event) => {
-      if (displayState === "SUCCESS" || displayState === "MISSING") {
+      if ([DisplayState.SUCCESS, DisplayState.MISSING].includes(displayState)) {
         if (event.dir == SWIPE_DIRECTION.UP) {
           goNext();
         }
       }
-      if (displayState === "THINKING") {
+      if (displayState === DisplayState.THINKING) {
         if (event.dir == SWIPE_DIRECTION.LEFT) {
           const result = judgeAnswer(displayQuiz, 1);
-          setDisplayState(result ? "SUCCESS" : "MISSING");
+          setDisplayState(result ? DisplayState.SUCCESS : DisplayState.MISSING);
         }
         if (event.dir == SWIPE_DIRECTION.RIGHT) {
           const result = judgeAnswer(displayQuiz, 2);
-          setDisplayState(result ? "SUCCESS" : "MISSING");
+          setDisplayState(result ? DisplayState.SUCCESS : DisplayState.MISSING);
         }
         if (event.dir == SWIPE_DIRECTION.UP) {
           goNext();
@@ -125,12 +131,12 @@ export default function Home() {
 
   const handleAnswer1Click = () => {
     const result = judgeAnswer(displayQuiz, 1);
-    setDisplayState(result ? "SUCCESS" : "MISSING");
+    setDisplayState(result ? DisplayState.SUCCESS : DisplayState.MISSING);
   };
 
   const handleAnswer2Click = () => {
     const result = judgeAnswer(displayQuiz, 2);
-    setDisplayState(result ? "SUCCESS" : "MISSING");
+    setDisplayState(result ? DisplayState.SUCCESS : DisplayState.MISSING);
   };
 
   const handleNextClick = () => {
@@ -150,20 +156,15 @@ export default function Home() {
               <div className={styles.box}>
                 <h1>
                   {displayQuiz.question}
-                  {displayState === "SUCCESS" && <p>正解!!</p>}
-                  {displayState === "MISSING" && <p>不正解</p>}
+                  {displayState === DisplayState.SUCCESS && <p>正解!!</p>}
+                  {displayState === DisplayState.MISSING && <p>不正解</p>}
                 </h1>
-                {displayState === "THINKING" && (
+                {displayState === DisplayState.THINKING ? (
                   <>
-                    <h2 onClick={handleAnswer1Click}>
-                      ←{displayQuiz.answer1}
-                    </h2>
-                    <h2 onClick={handleAnswer2Click}>
-                      {displayQuiz.answer2}→
-                    </h2>
+                    <h2 onClick={handleAnswer1Click}>←{displayQuiz.answer1}</h2>
+                    <h2 onClick={handleAnswer2Click}>{displayQuiz.answer2}→</h2>
                   </>
-                )}
-                {displayState !== "THINKING" && (
+                ) : (
                   <h2 onClick={handleNextClick}>next Quiz ↓</h2>
                 )}
               </div>
