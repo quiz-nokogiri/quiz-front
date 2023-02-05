@@ -1,8 +1,15 @@
 import axios from "axios";
 import styles from "../styles/Home.module.css";
-// import axios, { AxiosRequestConfig } from "axios";
-import { useEffect, useMemo, useReducer, useRef, useState } from "react";
-import { useSwipeable } from "react-swipeable";
+import { useEffect, useMemo, useReducer, useState } from "react";
+import { useSwipeable, LEFT, RIGHT, UP, DOWN } from "react-swipeable";
+
+const SWIPE_DIRECTION = {
+  LEFT,
+  RIGHT,
+  UP,
+  DOWN,
+};
+
 // import { text } from "stream/consumers";
 const http = axios.create({
   // baseURL: "https://quiz-flask.azurewebsites.net/",
@@ -15,12 +22,6 @@ const http = axios.create({
     // 'Content-Type': 'text/plain'
   },
 });
-var place = -1;
-const back_num = new Array();
-// [
-//     [問題1, 問題１＿答え1, 問題１＿答え2, 問題１＿正解],
-//     [問題2, 問題２＿答え1, 問題２＿答え2, 問題２＿正解],
-// ]
 
 type Quiz = {
   question: string;
@@ -30,19 +31,15 @@ type Quiz = {
 };
 
 export default function Home() {
-  // 問題、選択肢1、選択肢2, 答え
-  // const [displayQuiz, setDisplayQuiz] = useState<Quiz>();
   const [quizzes, setQuizzes] = useState<Quiz[]>([]);
 
   const [currentQuizNumber, dispatchCurrentQuizNumber] = useReducer(
-    (prev: number, action: { type: "increment" | "decrement" | "reset" }) => {
+    (prev: number, action: { type: "increment" | "decrement" }) => {
       switch (action.type) {
         case "increment":
           return prev + 1;
         case "decrement":
           return Math.max(prev - 1, 0);
-        case "reset":
-          return 0;
       }
     },
     0
@@ -58,107 +55,61 @@ export default function Home() {
     const res = await http.get("/quiz");
     const data = JSON.parse(JSON.stringify(res.data));
 
-    const quiz = {
-      question: data.quiz,
-      answer1: data.answer1,
-      answer2: data.answer2,
-      correct_answer: data.correct_answer,
-    };
-
-    setQuizzes((prev) => [...prev, quiz]);
-
-    if (typeof document === "undefined") {
-      return;
-    }
-
-    document.getElementById("answer_T")!.style.display = "none";
-    document.getElementById("answer_F")!.style.display = "none";
-    document.getElementById("reload")!.style.display = "none";
-
-    const choice_1 = document.getElementById("choice_1")!;
-    const choice_2 = document.getElementById("choice_2")!;
-
-    choice_1.style.display = "inline";
-    choice_2.style.display = "inline";
+    setQuizzes((prev) => [
+      ...prev,
+      {
+        question: data.quiz,
+        answer1: data.answer1,
+        answer2: data.answer2,
+        correct_answer: data.correct_answer,
+      },
+    ]);
   };
+
+  // 状態: 問題表示中, 正解表示中, 不正解表示中
+  const [displayState, setDisplayState] = useState<
+    "THINKING" | "SUCCESS" | "MISSING"
+  >("THINKING");
 
   const goNext = () => {
     dispatchCurrentQuizNumber({ type: "increment" });
+    setDisplayState("THINKING");
     fetchQuiz();
   };
 
   const goPrev = () => {
     dispatchCurrentQuizNumber({ type: "decrement" });
+    setDisplayState("THINKING");
   };
 
-  // Note: DOM を参照して、直接いじりたいときは、useRef を使う
-  const choiceElm1 = useRef<HTMLHeadingElement>(null);
-  const choiceElm2 = useRef<HTMLHeadingElement>(null);
-  const reloadElm = useRef<HTMLHeadingElement>(null);
-  const answerTrueElm = useRef<HTMLParagraphElement>(null);
-  const answerFalseElm = useRef<HTMLParagraphElement>(null);
-
-  let judg_answer = async (e: any) => {
-    if (
-      !choiceElm1.current ||
-      !choiceElm2.current ||
-      !reloadElm.current ||
-      !answerTrueElm.current ||
-      !answerFalseElm.current
-    ) {
-      return;
-    }
-    if (e == displayQuiz[3]) {
-      answerTrueElm.current.style.display = "block";
-      answerFalseElm.current.style.display = "none";
-      choiceElm1.current.style.display = "none";
-      choiceElm2.current.style.display = "none";
-      reloadElm.current.style.display = "block";
+  const judgeAnswer = (quiz: Quiz, answer: 1 | 2) => {
+    if (answer === 1) {
+      return quiz.correct_answer === quiz.answer1;
     } else {
-      answerTrueElm.current.style.display = "none";
-      answerFalseElm.current.style.display = "block";
-      choiceElm1.current.style.display = "none";
-      choiceElm2.current.style.display = "none";
-      reloadElm.current.style.display = "block";
+      return quiz.correct_answer === quiz.answer2;
     }
   };
+
   const handlers = useSwipeable({
     onSwiped: (event) => {
-      // document.addEventListener("keydown",p=> {
-      console.log(event);
-      if (
-        document.getElementById("answer_T")!.style.display == "block" ||
-        document.getElementById("answer_F")!.style.display == "block"
-      ) {
-        if (event.dir == "Left") {
-          // 正解表示後の左スワイプイベント
-        }
-        if (event.dir == "Right") {
-          // 正解表示後の右スワイプイベント
-        }
-        if (event.dir == "Up") {
+      if (displayState === "SUCCESS" || displayState === "MISSING") {
+        if (event.dir == SWIPE_DIRECTION.UP) {
           goNext();
         }
-      } else {
-        // if (p.code =="ArrowLeft" || event.dir=="Left"){
-        if (event.dir == "Left") {
-          // 左にスワイプしたときに発火するイベント
-          judg_answer(displayQuiz[1]);
-          // hogehoge()
+      }
+      if (displayState === "THINKING") {
+        if (event.dir == SWIPE_DIRECTION.LEFT) {
+          const result = judgeAnswer(displayQuiz, 1);
+          setDisplayState(result ? "SUCCESS" : "MISSING");
         }
-        // if (event.dir == "Right" || p.code =="ArrowRight"){
-        if (event.dir == "Right") {
-          // 右にスワイプしたときに発火するイベント
-          judg_answer(displayQuiz[2]);
-          // hogehoge()
+        if (event.dir == SWIPE_DIRECTION.RIGHT) {
+          const result = judgeAnswer(displayQuiz, 2);
+          setDisplayState(result ? "SUCCESS" : "MISSING");
         }
-        // if (event.dir == "Up" || p.code =="ArrowDown"){
-        if (event.dir == "Up") {
-          // past_quiz()
+        if (event.dir == SWIPE_DIRECTION.UP) {
           goNext();
-          // })
         }
-        if (event.dir == "Down") {
+        if (event.dir == SWIPE_DIRECTION.DOWN) {
           goPrev();
         }
       }
@@ -171,14 +122,24 @@ export default function Home() {
     fetchQuiz();
   }, []);
 
+  const handleAnswer1Click = () => {
+    const result = judgeAnswer(displayQuiz, 1);
+    setDisplayState(result ? "SUCCESS" : "MISSING");
+  };
+
+  const handleAnswer2Click = () => {
+    const result = judgeAnswer(displayQuiz, 2);
+    setDisplayState(result ? "SUCCESS" : "MISSING");
+  };
+
+  const handleNextClick = () => {
+    goNext();
+  };
+
   return (
     <>
       <div {...handlers} className={styles.entire}>
         <div className={styles.container}>
-          {/* <Head>
-          <title>サバ塩</title>
-          <link rel="icon" href="/favicon.ico" />
-        </Head> */}
           <main className={styles.main}>
             <h1 className={styles.title}>
               サバ<span>塩</span>
@@ -188,18 +149,22 @@ export default function Home() {
               <div className={styles.box}>
                 <h1>
                   {displayQuiz.question}
-                  <p ref={answerTrueElm}>正解!!</p>
-                  <p ref={answerFalseElm}>不正解</p>
+                  {displayState === "SUCCESS" && <p>正解!!</p>}
+                  {displayState === "MISSING" && <p>不正解</p>}
                 </h1>
-                <h2 ref={choiceElm1} onClick={(e) => judg_answer(e)}>
-                  ←{displayQuiz.answer1}
-                </h2>
-                <h2 ref={choiceElm2} onClick={(e) => judg_answer(e)}>
-                  {displayQuiz.answer2}→
-                </h2>
-                <h2 ref={reloadElm} onClick={() => fetchQuiz()}>
-                  next Quiz ↓
-                </h2>
+                {displayState === "THINKING" && (
+                  <>
+                    <h2 onClick={handleAnswer1Click}>
+                      ←{displayQuiz.answer1}
+                    </h2>
+                    <h2 onClick={handleAnswer2Click}>
+                      {displayQuiz.answer2}→
+                    </h2>
+                  </>
+                )}
+                {displayState !== "THINKING" && (
+                  <h2 onClick={handleNextClick}>next Quiz ↓</h2>
+                )}
               </div>
             </div>
           </main>
