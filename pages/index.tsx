@@ -52,7 +52,6 @@ export default function Home() {
   );
 
   const fetchQuiz = async () => {
-    // const res = await http.get("/user/1");
     const res = await http.get("/quiz");
     const data = JSON.parse(JSON.stringify(res.data));
 
@@ -67,7 +66,6 @@ export default function Home() {
     ]);
   };
 
-  // 状態: 問題表示中, 正解表示中, 不正解表示中
   const [displayState, setDisplayState] = useState<DisplayState>(
     DisplayState.THINKING
   );
