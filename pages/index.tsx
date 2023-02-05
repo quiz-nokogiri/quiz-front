@@ -2,6 +2,7 @@ import styles from "../styles/Home.module.css";
 import { useEffect, useMemo, useReducer, useState } from "react";
 import { useSwipeable, LEFT, RIGHT, UP, DOWN } from "react-swipeable";
 import { fetchQuiz, judgeAnswer, Quiz } from "../features/quiz";
+import { useKeyPressEffect } from "../hooks/useKeyPressEffect";
 
 const SWIPE_DIRECTION = {
   LEFT,
@@ -82,6 +83,49 @@ export default function Home() {
     },
     trackMouse: true,
   });
+
+  useKeyPressEffect(
+    "ArrowLeft",
+    () => {
+      if (displayState !== DisplayState.THINKING) {
+        return;
+      }
+      const result = judgeAnswer(displayQuiz, 1);
+      setDisplayState(result ? DisplayState.SUCCESS : DisplayState.MISSING);
+    },
+    [displayState, displayQuiz]
+  );
+
+  useKeyPressEffect(
+    "ArrowRight",
+    () => {
+      if (displayState !== DisplayState.THINKING) {
+        return;
+      }
+      const result = judgeAnswer(displayQuiz, 2);
+      setDisplayState(result ? DisplayState.SUCCESS : DisplayState.MISSING);
+    },
+    [displayState, displayQuiz]
+  );
+
+  useKeyPressEffect(
+    "ArrowUp",
+    () => {
+      goNext();
+    },
+    [displayState, goNext]
+  );
+
+  useKeyPressEffect(
+    "ArrowDown",
+    () => {
+      if (displayState !== DisplayState.THINKING) {
+        return;
+      }
+      goPrev();
+    },
+    [displayState, goPrev]
+  );
 
   useEffect(() => {
     // NOTE: 次の問題を表示する時のローディング時間を短縮するために, 一つ先の問題を取得しておく
