@@ -1,33 +1,13 @@
-import axios from "axios";
 import styles from "../styles/Home.module.css";
 import { useEffect, useMemo, useReducer, useState } from "react";
 import { useSwipeable, LEFT, RIGHT, UP, DOWN } from "react-swipeable";
+import { fetchQuiz, judgeAnswer, Quiz } from "../features/quiz";
 
 const SWIPE_DIRECTION = {
   LEFT,
   RIGHT,
   UP,
   DOWN,
-};
-
-// import { text } from "stream/consumers";
-const http = axios.create({
-  // baseURL: "https://quiz-flask.azurewebsites.net/",
-  baseURL: "http://127.0.0.1:5000/",
-  // baseURL: "http://127.0.0.1:8080/",
-  headers: {
-    // 'Access-Control-Allow-Origin': 'https://quiz-flask.azurewebsites.net/',
-    "Access-Control-AlloSw-Origin": "http://127.0.0.1:5000/",
-    // 'Access-Control-Allow-Origin': '*' //'http://127.0.0.1:8080/',
-    // 'Content-Type': 'text/plain'
-  },
-});
-
-type Quiz = {
-  question: string;
-  answer1: string;
-  answer2: string;
-  correct: string;
 };
 
 enum DisplayState {
@@ -38,6 +18,11 @@ enum DisplayState {
 
 export default function Home() {
   const [quizzes, setQuizzes] = useState<Quiz[]>([]);
+
+  const addQuizzesByFetching = async () => {
+    const quiz = await fetchQuiz();
+    setQuizzes((prev) => [...prev, quiz]);
+  };
 
   const [currentQuizNumber, dispatchCurrentQuizNumber] = useReducer(
     (prev: number, action: { type: "increment" | "decrement" }) => {
@@ -51,21 +36,6 @@ export default function Home() {
     0
   );
 
-  const fetchQuiz = async () => {
-    const res = await http.get("/quiz");
-    const data = JSON.parse(JSON.stringify(res.data));
-
-    setQuizzes((prev) => [
-      ...prev,
-      {
-        question: data.quiz,
-        answer1: data.answer1,
-        answer2: data.answer2,
-        correct: data.correct_answer,
-      },
-    ]);
-  };
-
   const [displayState, setDisplayState] = useState<DisplayState>(
     DisplayState.THINKING
   );
@@ -73,20 +43,12 @@ export default function Home() {
   const goNext = () => {
     dispatchCurrentQuizNumber({ type: "increment" });
     setDisplayState(DisplayState.THINKING);
-    fetchQuiz();
+    addQuizzesByFetching();
   };
 
   const goPrev = () => {
     dispatchCurrentQuizNumber({ type: "decrement" });
     setDisplayState(DisplayState.THINKING);
-  };
-
-  const judgeAnswer = (quiz: Quiz, answer: 1 | 2) => {
-    if (answer === 1) {
-      return quiz.correct === quiz.answer1;
-    } else {
-      return quiz.correct === quiz.answer2;
-    }
   };
 
   const displayQuiz = useMemo(
@@ -123,8 +85,8 @@ export default function Home() {
 
   useEffect(() => {
     // NOTE: 次の問題を表示する時のローディング時間を短縮するために, 一つ先の問題を取得しておく
-    fetchQuiz();
-    fetchQuiz();
+    addQuizzesByFetching();
+    addQuizzesByFetching();
   }, []);
 
   const handleAnswer1Click = () => {
