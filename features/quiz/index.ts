@@ -9,12 +9,7 @@ export type Quiz = {
 
 export const fetchQuiz = async (): Promise<Quiz> => {
   const { data } = await http.get("/quiz");
-  return {
-    question: data.quiz,
-    answer1: data.answer1,
-    answer2: data.answer2,
-    correct: data.correct_answer,
-  };
+  return data as Quiz;
 };
 
 export const judgeAnswer = (quiz: Quiz, answer: 1 | 2) => {
