@@ -1,7 +1,7 @@
 import axios from "axios";
 import styles from "../styles/Home.module.css";
 // import axios, { AxiosRequestConfig } from "axios";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useReducer, useRef, useState } from "react";
 import { useSwipeable } from "react-swipeable";
 // import { text } from "stream/consumers";
 const http = axios.create({
@@ -17,6 +17,10 @@ const http = axios.create({
 });
 var place = -1;
 const back_num = new Array();
+// [
+//     [問題1, 問題１＿答え1, 問題１＿答え2, 問題１＿正解],
+//     [問題2, 問題２＿答え1, 問題２＿答え2, 問題２＿正解],
+// ]
 
 type Quiz = {
   question: string;
@@ -28,22 +32,39 @@ type Quiz = {
 export default function Home() {
   // 問題、選択肢1、選択肢2, 答え
   const [fetchedMessage, setFetchedMessage] = useState<Quiz>();
+  const [quizzes, setQuizzes] = useState<Quiz[]>([]);
+
+  const [currentQuizNumber, dispatchCurrentQuizNumber] = useReducer(
+    (prev: number, action: { type: "increment" | "decrement" | "reset" }) => {
+      switch (action.type) {
+        case "increment":
+          return prev + 1;
+        case "decrement":
+          return Math.max(prev - 1, 0);
+        case"reset":
+          return 0;
+      }
+    },
+    0
+  );
 
   let get_quiz = async () => {
     // const res = await http.get("/user/1");
     const res = await http.get("/quiz");
     const data = JSON.parse(JSON.stringify(res.data));
 
-    setFetchedMessage({
+    const quiz = {
       question: data.quiz,
       answer1: data.answer1,
       answer2: data.answer2,
       correct_answer: data.correct_answer,
-    });
+    };
 
-    back_num.push(text);
-    place += 1;
-    setFetchedMessage(text);
+    setFetchedMessage(quiz);
+    setQuizzes((prev) => [...prev, quiz]);
+
+    dispatchCurrentQuizNumber({ type: "increment" });
+
     if (typeof document === "undefined") {
       return;
     }
