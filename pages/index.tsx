@@ -53,8 +53,8 @@ const useHome = () => {
     setDisplayState(DisplayState.THINKING);
   };
 
-  const displayQuiz = useMemo(
-    () => quizzes[currentQuizNumber],
+  const displayQuiz = useMemo<Quiz | undefined>(
+    () => quizzes[currentQuizNumber] ?? undefined,
     [quizzes, currentQuizNumber]
   );
 
@@ -66,11 +66,11 @@ const useHome = () => {
         }
       }
       if (displayState === DisplayState.THINKING) {
-        if (event.dir == SWIPE_DIRECTION.LEFT) {
+        if (event.dir == SWIPE_DIRECTION.LEFT && displayQuiz) {
           const result = judgeAnswer(displayQuiz, 1);
           setDisplayState(result ? DisplayState.SUCCESS : DisplayState.MISSING);
         }
-        if (event.dir == SWIPE_DIRECTION.RIGHT) {
+        if (event.dir == SWIPE_DIRECTION.RIGHT && displayQuiz) {
           const result = judgeAnswer(displayQuiz, 2);
           setDisplayState(result ? DisplayState.SUCCESS : DisplayState.MISSING);
         }
@@ -88,7 +88,7 @@ const useHome = () => {
   useKeyPressEffect(
     "ArrowLeft",
     () => {
-      if (displayState !== DisplayState.THINKING) {
+      if (displayState !== DisplayState.THINKING || !displayQuiz) {
         return;
       }
       const result = judgeAnswer(displayQuiz, 1);
@@ -100,7 +100,7 @@ const useHome = () => {
   useKeyPressEffect(
     "ArrowRight",
     () => {
-      if (displayState !== DisplayState.THINKING) {
+      if (displayState !== DisplayState.THINKING || !displayQuiz) {
         return;
       }
       const result = judgeAnswer(displayQuiz, 2);
@@ -135,11 +135,17 @@ const useHome = () => {
   }, []);
 
   const answerQuiz1 = () => {
+    if (displayState !== DisplayState.THINKING || !displayQuiz) {
+      return;
+    }
     const result = judgeAnswer(displayQuiz, 1);
     setDisplayState(result ? DisplayState.SUCCESS : DisplayState.MISSING);
   };
 
   const answerQuiz2 = () => {
+    if (displayState !== DisplayState.THINKING || !displayQuiz) {
+      return;
+    }
     const result = judgeAnswer(displayQuiz, 2);
     setDisplayState(result ? DisplayState.SUCCESS : DisplayState.MISSING);
   };
@@ -177,24 +183,34 @@ export default function Home() {
           <h1 className={styles.title}>
             サバ<span>塩</span>
           </h1>
-          <h1>問題</h1>
-          <div id="wrap">
-            <div className={styles.box}>
-              <h1>
-                {displayQuiz.question}
-                {displayState === DisplayState.SUCCESS && <p>正解!!</p>}
-                {displayState === DisplayState.MISSING && <p>不正解</p>}
-              </h1>
-              {displayState === DisplayState.THINKING ? (
-                <>
-                  <h2 onClick={handleAnswer1Click}>←{displayQuiz.answer1}</h2>
-                  <h2 onClick={handleAnswer2Click}>{displayQuiz.answer2}→</h2>
-                </>
-              ) : (
-                <h2 onClick={handleNextClick}>next Quiz ↓</h2>
-              )}
-            </div>
-          </div>
+          {!displayQuiz ? (
+            <h1>loading...</h1>
+          ) : (
+            <>
+              <h1>問題</h1>
+              <div id="wrap">
+                <div className={styles.box}>
+                  <h1>
+                    {displayQuiz.question}
+                    {displayState === DisplayState.SUCCESS && <p>正解!!</p>}
+                    {displayState === DisplayState.MISSING && <p>不正解</p>}
+                  </h1>
+                  {displayState === DisplayState.THINKING ? (
+                    <>
+                      <h2 onClick={handleAnswer1Click}>
+                        ←{displayQuiz.answer1}
+                      </h2>
+                      <h2 onClick={handleAnswer2Click}>
+                        {displayQuiz.answer2}→
+                      </h2>
+                    </>
+                  ) : (
+                    <h2 onClick={handleNextClick}>next Quiz ↓</h2>
+                  )}
+                </div>
+              </div>
+            </>
+          )}
         </main>
       </div>
     </div>
