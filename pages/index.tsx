@@ -17,7 +17,8 @@ enum DisplayState {
   MISSING,
 }
 
-export default function Home() {
+// Note: あんまり使わないけど、複雑なロジックはこのような形で切り出すこともできます。
+const useHome = () => {
   const [quizzes, setQuizzes] = useState<Quiz[]>([]);
 
   const addQuizzesByFetching = async () => {
@@ -133,14 +134,36 @@ export default function Home() {
     addQuizzesByFetching();
   }, []);
 
-  const handleAnswer1Click = () => {
+  const answerQuiz1 = () => {
     const result = judgeAnswer(displayQuiz, 1);
     setDisplayState(result ? DisplayState.SUCCESS : DisplayState.MISSING);
   };
 
-  const handleAnswer2Click = () => {
+  const answerQuiz2 = () => {
     const result = judgeAnswer(displayQuiz, 2);
     setDisplayState(result ? DisplayState.SUCCESS : DisplayState.MISSING);
+  };
+
+  return {
+    displayQuiz,
+    displayState,
+    answerQuiz1,
+    answerQuiz2,
+    goNext,
+    bind: handlers,
+  };
+};
+
+export default function Home() {
+  const { displayQuiz, displayState, answerQuiz1, answerQuiz2, goNext, bind } =
+    useHome();
+
+  const handleAnswer1Click = () => {
+    answerQuiz1();
+  };
+
+  const handleAnswer2Click = () => {
+    answerQuiz2();
   };
 
   const handleNextClick = () => {
@@ -148,34 +171,32 @@ export default function Home() {
   };
 
   return (
-    <>
-      <div {...handlers} className={styles.entire}>
-        <div className={styles.container}>
-          <main className={styles.main}>
-            <h1 className={styles.title}>
-              サバ<span>塩</span>
-            </h1>
-            <h1>問題</h1>
-            <div id="wrap">
-              <div className={styles.box}>
-                <h1>
-                  {displayQuiz.question}
-                  {displayState === DisplayState.SUCCESS && <p>正解!!</p>}
-                  {displayState === DisplayState.MISSING && <p>不正解</p>}
-                </h1>
-                {displayState === DisplayState.THINKING ? (
-                  <>
-                    <h2 onClick={handleAnswer1Click}>←{displayQuiz.answer1}</h2>
-                    <h2 onClick={handleAnswer2Click}>{displayQuiz.answer2}→</h2>
-                  </>
-                ) : (
-                  <h2 onClick={handleNextClick}>next Quiz ↓</h2>
-                )}
-              </div>
+    <div {...bind} className={styles.entire}>
+      <div className={styles.container}>
+        <main className={styles.main}>
+          <h1 className={styles.title}>
+            サバ<span>塩</span>
+          </h1>
+          <h1>問題</h1>
+          <div id="wrap">
+            <div className={styles.box}>
+              <h1>
+                {displayQuiz.question}
+                {displayState === DisplayState.SUCCESS && <p>正解!!</p>}
+                {displayState === DisplayState.MISSING && <p>不正解</p>}
+              </h1>
+              {displayState === DisplayState.THINKING ? (
+                <>
+                  <h2 onClick={handleAnswer1Click}>←{displayQuiz.answer1}</h2>
+                  <h2 onClick={handleAnswer2Click}>{displayQuiz.answer2}→</h2>
+                </>
+              ) : (
+                <h2 onClick={handleNextClick}>next Quiz ↓</h2>
+              )}
             </div>
-          </main>
-        </div>
+          </div>
+        </main>
       </div>
-    </>
+    </div>
   );
 }
