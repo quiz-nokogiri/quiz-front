@@ -27,7 +27,7 @@ type Quiz = {
   question: string;
   answer1: string;
   answer2: string;
-  correct_answer: string;
+  correct: string;
 };
 
 enum DisplayState {
@@ -61,7 +61,7 @@ export default function Home() {
         question: data.quiz,
         answer1: data.answer1,
         answer2: data.answer2,
-        correct_answer: data.correct_answer,
+        correct: data.correct_answer,
       },
     ]);
   };
@@ -83,9 +83,9 @@ export default function Home() {
 
   const judgeAnswer = (quiz: Quiz, answer: 1 | 2) => {
     if (answer === 1) {
-      return quiz.correct_answer === quiz.answer1;
+      return quiz.correct === quiz.answer1;
     } else {
-      return quiz.correct_answer === quiz.answer2;
+      return quiz.correct === quiz.answer2;
     }
   };
 
