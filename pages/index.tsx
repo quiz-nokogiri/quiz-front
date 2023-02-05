@@ -118,6 +118,7 @@ export default function Home() {
   });
 
   useEffect(() => {
+    // NOTE: 次の問題を表示する時のローディング時間を短縮するために, 一つ先の問題を取得しておく
     fetchQuiz();
     fetchQuiz();
   }, []);
