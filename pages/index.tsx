@@ -1,7 +1,7 @@
 import axios from "axios";
 import styles from "../styles/Home.module.css";
 // import axios, { AxiosRequestConfig } from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSwipeable } from "react-swipeable";
 // import { text } from "stream/consumers";
 const http = axios.create({
@@ -58,26 +58,36 @@ export default function Home() {
     console.log(fetchedMessage);
     setFetchedMessage(shown_quiz);
   };
+
+  // Note: DOM を参照して、直接いじりたいときは、useRef を使う
+  const choiceElm1 = useRef<HTMLHeadingElement>(null);
+  const choiceElm2 = useRef<HTMLHeadingElement>(null);
+  const reloadElm = useRef<HTMLHeadingElement>(null);
+  const answerTrueElm = useRef<HTMLParagraphElement>(null);
+  const answerFalseElm = useRef<HTMLParagraphElement>(null);
+
   let judg_answer = async (e: any) => {
-    // console.log(e.target.innerText);
-    const choice_1 = document.getElementById("choice_1")!;
-    const choice_2 = document.getElementById("choice_2")!;
-    const reload = document.getElementById("reload")!;
-    const answer_T = document.getElementById("answer_T")!;
-    const answer_F = document.getElementById("answer_F")!;
-    // if (e.target.innerText == fetchedMessage[3]) {
+    if (
+      !choiceElm1.current ||
+      !choiceElm2.current ||
+      !reloadElm.current ||
+      !answerTrueElm.current ||
+      !answerFalseElm.current
+    ) {
+      return;
+    }
     if (e == fetchedMessage[3]) {
-      answer_T.style.display = "block";
-      answer_F.style.display = "none";
-      choice_1.style.display = "none";
-      choice_2.style.display = "none";
-      reload.style.display = "block";
+      answerTrueElm.current.style.display = "block";
+      answerFalseElm.current.style.display = "none";
+      choiceElm1.current.style.display = "none";
+      choiceElm2.current.style.display = "none";
+      reloadElm.current.style.display = "block";
     } else {
-      answer_T.style.display = "none";
-      answer_F.style.display = "block";
-      choice_1.style.display = "none";
-      choice_2.style.display = "none";
-      reload.style.display = "block";
+      answerTrueElm.current.style.display = "none";
+      answerFalseElm.current.style.display = "block";
+      choiceElm1.current.style.display = "none";
+      choiceElm2.current.style.display = "none";
+      reloadElm.current.style.display = "block";
     }
   };
   const handlers = useSwipeable({
@@ -144,16 +154,16 @@ export default function Home() {
               <div className={styles.box}>
                 <h1>
                   {fetchedMessage[0]}
-                  <p id="answer_T">正解!!</p>
-                  <p id="answer_F">不正解</p>
+                  <p ref={answerTrueElm}>正解!!</p>
+                  <p ref={answerFalseElm}>不正解</p>
                 </h1>
-                <h2 id="choice_1" onClick={(e) => judg_answer(e)}>
+                <h2 ref={choiceElm1} onClick={(e) => judg_answer(e)}>
                   ←{fetchedMessage[1]}
                 </h2>
-                <h2 id="choice_2" onClick={(e) => judg_answer(e)}>
+                <h2 ref={choiceElm2} onClick={(e) => judg_answer(e)}>
                   {fetchedMessage[2]}→
                 </h2>
-                <h2 id="reload" onClick={() => get_quiz()}>
+                <h2 ref={reloadElm} onClick={() => get_quiz()}>
                   next Quiz ↓
                 </h2>
               </div>
