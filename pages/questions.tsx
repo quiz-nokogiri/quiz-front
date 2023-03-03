@@ -80,6 +80,13 @@ const useQuestionsPage = () => {
         if (event.dir == SWIPE_DIRECTION.DOWN) {
           goPrev();
         }
+      } else {
+        if (event.dir == SWIPE_DIRECTION.UP) {
+          goNext();
+        }
+        if (event.dir == SWIPE_DIRECTION.DOWN) {
+          goPrev();
+        }
       }
     },
     trackMouse: true,
@@ -112,21 +119,27 @@ const useQuestionsPage = () => {
   useKeyPressEffect(
     "ArrowUp",
     () => {
-      goNext();
+      goPrev();
+      // goNext();
     },
-    [displayState, goNext]
+    [displayState, goPrev]
+    // [displayState, goNext]
   );
 
   useKeyPressEffect(
     "ArrowDown",
     () => {
-      if (displayState !== DisplayState.THINKING) {
-        return;
-      }
-      goPrev();
+      goNext();
     },
-    [displayState, goPrev]
+    [displayState, goNext]
   );
+  //     if (displayState !== DisplayState.THINKING) {
+  //       return;
+  //     }
+  //     goPrev();
+  //   },
+  //   [displayState, goPrev]
+  // );
 
   useEffect(() => {
     // NOTE: 次の問題を表示する時のローディング時間を短縮するために, 一つ先の問題を取得しておく
