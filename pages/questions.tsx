@@ -81,6 +81,9 @@ const useQuestionsPage = () => {
           goPrev();
         }
       } else {
+        if (event.dir == SWIPE_DIRECTION.RIGHT) {
+          setDisplayState(DisplayState.THINKING);
+        }
         if (event.dir == SWIPE_DIRECTION.UP) {
           goNext();
         }
@@ -95,11 +98,12 @@ const useQuestionsPage = () => {
   useKeyPressEffect(
     "ArrowLeft",
     () => {
-      if (displayState !== DisplayState.THINKING || !displayQuiz) {
-        return;
+      if (displayState == DisplayState.THINKING && displayQuiz) {
+        const result = judgeAnswer(displayQuiz, 1);
+        setDisplayState(result ? DisplayState.SUCCESS : DisplayState.MISSING);
+      } else if (displayState !== DisplayState.THINKING) {
+        setDisplayState(DisplayState.THINKING);
       }
-      const result = judgeAnswer(displayQuiz, 1);
-      setDisplayState(result ? DisplayState.SUCCESS : DisplayState.MISSING);
     },
     [displayState, displayQuiz]
   );
@@ -123,10 +127,6 @@ const useQuestionsPage = () => {
     },
     [displayState, goPrev]
   );
-  //     goNext();
-  //   },
-  //   [displayState, goNext]
-  // );
 
   useKeyPressEffect(
     "ArrowDown",
@@ -135,13 +135,6 @@ const useQuestionsPage = () => {
     },
     [displayState, goNext]
   );
-  //     if (displayState !== DisplayState.THINKING) {
-  //       return;
-  //     }
-  //     goPrev();
-  //   },
-  //   [displayState, goPrev]
-  // );
 
   useEffect(() => {
     // NOTE: 次の問題を表示する時のローディング時間を短縮するために, 一つ先の問題を取得しておく
