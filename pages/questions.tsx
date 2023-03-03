@@ -81,6 +81,9 @@ const useQuestionsPage = () => {
           goPrev();
         }
       } else {
+        if (event.dir == SWIPE_DIRECTION.RIGHT) {
+          setDisplayState(DisplayState.THINKING);
+        }
         if (event.dir == SWIPE_DIRECTION.UP) {
           goNext();
         }
@@ -95,11 +98,15 @@ const useQuestionsPage = () => {
   useKeyPressEffect(
     "ArrowLeft",
     () => {
-      if (displayState !== DisplayState.THINKING || !displayQuiz) {
-        return;
+      if (displayState == DisplayState.THINKING && displayQuiz) {
+        // return;
+        const result = judgeAnswer(displayQuiz, 1);
+        setDisplayState(result ? DisplayState.SUCCESS : DisplayState.MISSING);
+      } else if (displayState !== DisplayState.THINKING) {
+        setDisplayState(DisplayState.THINKING);
       }
-      const result = judgeAnswer(displayQuiz, 1);
-      setDisplayState(result ? DisplayState.SUCCESS : DisplayState.MISSING);
+      // const result = judgeAnswer(displayQuiz, 1);
+      // setDisplayState(result ? DisplayState.SUCCESS : DisplayState.MISSING);
     },
     [displayState, displayQuiz]
   );
