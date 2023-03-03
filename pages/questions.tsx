@@ -80,6 +80,13 @@ const useQuestionsPage = () => {
         if (event.dir == SWIPE_DIRECTION.DOWN) {
           goPrev();
         }
+      } else {
+        if (event.dir == SWIPE_DIRECTION.UP) {
+          goNext();
+        }
+        if (event.dir == SWIPE_DIRECTION.DOWN) {
+          goPrev();
+        }
       }
     },
     trackMouse: true,
@@ -112,21 +119,29 @@ const useQuestionsPage = () => {
   useKeyPressEffect(
     "ArrowUp",
     () => {
-      goNext();
-    },
-    [displayState, goNext]
-  );
-
-  useKeyPressEffect(
-    "ArrowDown",
-    () => {
-      if (displayState !== DisplayState.THINKING) {
-        return;
-      }
       goPrev();
     },
     [displayState, goPrev]
   );
+  //     goNext();
+  //   },
+  //   [displayState, goNext]
+  // );
+
+  useKeyPressEffect(
+    "ArrowDown",
+    () => {
+      goNext();
+    },
+    [displayState, goNext]
+  );
+  //     if (displayState !== DisplayState.THINKING) {
+  //       return;
+  //     }
+  //     goPrev();
+  //   },
+  //   [displayState, goPrev]
+  // );
 
   useEffect(() => {
     // NOTE: 次の問題を表示する時のローディング時間を短縮するために, 一つ先の問題を取得しておく
@@ -204,8 +219,8 @@ export default function QuestionsPage() {
                         {displayQuiz.answer2}→
                       </h2>
                     </>
-                  ) : (
-                    <h2 onClick={handleNextClick}>next Quiz ↓</h2>
+                    ) : (
+                    <h2 onClick={handleNextClick}>next Quiz ↑</h2>
                   )}
                 </div>
               </div>
