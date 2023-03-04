@@ -20,7 +20,6 @@ enum DisplayState {
 // Note: あんまり使わないけど、複雑なロジックはこのような形で切り出すこともできます。
 const useQuestionsPage = () => {
   const [quizzes, setQuizzes] = useState<Quiz[]>([]);
-
   const addQuizzesByFetching = async () => {
     const quiz = await fetchQuiz();
     setQuizzes((prev) => [...prev, quiz]);
@@ -39,18 +38,20 @@ const useQuestionsPage = () => {
   );
 
   const [displayState, setDisplayState] = useState<DisplayState>(
-    DisplayState.THINKING
+    DisplayState.THINKING,
   );
 
   const goNext = () => {
     dispatchCurrentQuizNumber({ type: "increment" });
     setDisplayState(DisplayState.THINKING);
     addQuizzesByFetching();
+    history.replaceState('', '', quizzes[currentQuizNumber].id);
   };
 
   const goPrev = () => {
     dispatchCurrentQuizNumber({ type: "decrement" });
     setDisplayState(DisplayState.THINKING);
+    history.replaceState('', '', quizzes[currentQuizNumber].id);
   };
 
   const displayQuiz = useMemo<Quiz | undefined>(

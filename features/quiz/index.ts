@@ -5,6 +5,7 @@ export type Quiz = {
   answer1: string;
   answer2: string;
   correct: string;
+  id: string
 };
 
 export const fetchQuiz = async (): Promise<Quiz> => {
