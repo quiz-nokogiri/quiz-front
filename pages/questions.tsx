@@ -205,14 +205,14 @@ export default function QuestionsPage() {
                     {displayState === DisplayState.MISSING && <p>不正解</p>}
                   </h1>
                   {displayState === DisplayState.THINKING ? (
-                    <>
-                      <h2 onClick={handleAnswer1Click}>
+                    <div className={styles.hako}> 
+                      <h2 onClick={handleAnswer1Click} className={styles.choice}>
                         ←{displayQuiz.answer1}
                       </h2>
-                      <h2 onClick={handleAnswer2Click}>
+                      <h2 onClick={handleAnswer2Click} className={styles.choice}>
                         {displayQuiz.answer2}→
                       </h2>
-                    </>
+                    </div>
                     ) : (
                     <h2 onClick={handleNextClick}>next Quiz ↑</h2>
                   )}

@@ -4,7 +4,7 @@ export type Quiz = {
   question: string;
   answer1: string;
   answer2: string;
-  correct: string;
+  correct: number;
   id: string
 };
 
@@ -15,8 +15,8 @@ export const fetchQuiz = async (): Promise<Quiz> => {
 
 export const judgeAnswer = (quiz: Quiz, answer: 1 | 2) => {
   if (answer === 1) {
-    return quiz.correct === quiz.answer1;
+    return quiz.correct === 1;
   } else {
-    return quiz.correct === quiz.answer2;
+    return quiz.correct === 2;
   }
 };
