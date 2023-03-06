@@ -13,7 +13,7 @@ export default function RootPage() {
         <title>UnlimitedQuiz</title>
       </Head><div className={styles.whole}>
         <h1 className={styles.theme}>
-          無限クイズ
+          UnlimitedQuiz
         </h1>
         <div className={styles.start}>
           <Link href="/quizzes">START</Link>

@@ -21,17 +21,13 @@
 }
 
 .title {
-  color: #0070f3;
+  color: #000000;
   text-decoration: none;
   margin: 0;
   line-height: 1.15;
-  font-size: 4rem;
+  font-size: 2rem;
   background: linear-gradient(#67a7cc, #c0c0c0);
   text-align: center;
-}
-
-.title span {
-  color: #fff;
 }
 
 .question {

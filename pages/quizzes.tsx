@@ -3,6 +3,7 @@ import { useEffect, useMemo, useReducer, useState } from "react";
 import { useSwipeable, LEFT, RIGHT, UP, DOWN } from "react-swipeable";
 import { fetchQuiz, judgeAnswer, Quiz } from "../features/quiz";
 import { useKeyPressEffect } from "../hooks/useKeyPressEffect";
+import Head from 'next/head'
 
 const SWIPE_DIRECTION = {
   LEFT,
@@ -45,15 +46,15 @@ const useQuestionsPage = () => {
     dispatchCurrentQuizNumber({ type: "increment" });
     setDisplayState(DisplayState.THINKING);
     addQuizzesByFetching();
-    // history.replaceState(null, 'quiz page', 'http://localhost:3000/quizzes/' + quizzes[currentQuizNumber].id);
-    history.replaceState(null, 'quiz page', 'https://unlimitedquiz.com/quizzes/' + quizzes[currentQuizNumber].id);
+    history.replaceState(null, 'quiz page', 'http://localhost:3000/quizzes/' + quizzes[currentQuizNumber].id);
+    // history.replaceState(null, 'quiz page', 'https://unlimitedquiz.com/quizzes/' + quizzes[currentQuizNumber].id);
   };
 
   const goPrev = () => {
     dispatchCurrentQuizNumber({ type: "decrement" });
     setDisplayState(DisplayState.THINKING);
-    // history.replaceState(null, 'quiz page', 'http://localhost:3000/quizzes/' + quizzes[currentQuizNumber].id);
-    history.replaceState(null, 'quiz page', 'https://unlimitedquiz.com/quizzes/' + quizzes[currentQuizNumber].id);
+    history.replaceState(null, 'quiz page', 'http://localhost:3000/quizzes/' + quizzes[currentQuizNumber].id);
+    // history.replaceState(null, 'quiz page', 'https://unlimitedquiz.com/quizzes/' + quizzes[currentQuizNumber].id);
   };
 
   const displayQuiz = useMemo<Quiz | undefined>(
@@ -188,42 +189,50 @@ export default function QuestionsPage() {
   };
 
   return (
-    <div {...bind} className={styles.entire}>
-      <div className={styles.container}>
-        <main className={styles.main}>
-          <h1 className={styles.title}>
-            サバ<span>塩</span>
-          </h1>
-          {!displayQuiz ? (
-            <h1>loading...</h1>
-          ) : (
-            <>
-              <h1>問題</h1>
-              <div id="wrap">
-                <div className={styles.box}>
-                  <h1>
-                    {displayQuiz.question}
-                    {displayState === DisplayState.SUCCESS && <p>正解!!</p>}
-                    {displayState === DisplayState.MISSING && <p>不正解</p>}
-                  </h1>
-                  {displayState === DisplayState.THINKING ? (
-                    <div className={styles.hako}> 
-                      <h2 onClick={handleAnswer1Click} className={styles.choice}>
-                        ←{displayQuiz.answer1}
-                      </h2>
-                      <h2 onClick={handleAnswer2Click} className={styles.choice}>
-                        {displayQuiz.answer2}→
-                      </h2>
-                    </div>
+    <>
+      <Head>
+        <title>UnlimitedQuiz</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="description" content="UnlimitedQuiz　無限クイズ 　- ワクワクする人生に。クイズを楽しみ、暇つぶししながら知識、好奇心を手に入れましょう。" />
+        <meta name="keywords" content="クイズ,無限,暇つぶし,スマートフォン,スマホ,UnlimitedQuiz,無限クイズ" />
+      </Head>
+      <div {...bind} className={styles.entire}>
+        <div className={styles.container}>
+          <main className={styles.main}>
+            <h1 className={styles.title}>
+              UnlimitedQuiz
+            </h1>
+            {!displayQuiz ? (
+              <h1>loading...</h1>
+            ) : (
+              <>
+                <h1>問題</h1>
+                <div id="wrap">
+                  <div className={styles.box}>
+                    <h1>
+                      {displayQuiz.question}
+                      {displayState === DisplayState.SUCCESS && <p>正解!!</p>}
+                      {displayState === DisplayState.MISSING && <p>不正解</p>}
+                    </h1>
+                    {displayState === DisplayState.THINKING ? (
+                      <div className={styles.hako}>
+                        <h2 onClick={handleAnswer1Click} className={styles.choice}>
+                          ←{displayQuiz.answer1}
+                        </h2>
+                        <h2 onClick={handleAnswer2Click} className={styles.choice}>
+                          {displayQuiz.answer2}→
+                        </h2>
+                      </div>
                     ) : (
-                    <h2 onClick={handleNextClick}>next Quiz ↑</h2>
-                  )}
+                      <h2 onClick={handleNextClick}>next Quiz ↑</h2>
+                    )}
+                  </div>
                 </div>
-              </div>
-            </>
-          )}
-        </main>
+              </>
+            )}
+          </main>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
