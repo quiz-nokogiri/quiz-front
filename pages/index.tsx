@@ -11,12 +11,15 @@ export default function RootPage() {
         <meta name="description" content="UnlimitedQuiz　無限クイズ 　- ワクワクする人生に。クイズを楽しみ、暇つぶししながら知識、好奇心を手に入れましょう。" />
         <meta name="keywords" content="クイズ,無限,暇つぶし,スマートフォン,スマホ,UnlimitedQuiz,無限クイズ" />
         <title>UnlimitedQuiz</title>
-      </Head><div className={styles.whole}>
+      </Head>
+      <div>
         <h1 className={styles.theme}>
           UnlimitedQuiz
         </h1>
-        <div className={styles.start}>
-          <Link href="/quizzes">START</Link>
+        <div className={styles.whole}>
+          <div className={styles.start}>
+            <Link href="/quizzes" className={styles.bo}>START</Link>
+          </div>
         </div>
       </div>
     </>
