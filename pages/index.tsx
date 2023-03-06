@@ -16,7 +16,7 @@ export default function RootPage() {
           無限クイズ
         </h1>
         <div className={styles.start}>
-          <Link href="/questions">START</Link>
+          <Link href="/quizzes">START</Link>
         </div>
       </div>
     </>
