@@ -4,6 +4,7 @@ import { useSwipeable, LEFT, RIGHT, UP, DOWN } from "react-swipeable";
 import { fetchQuiz, judgeAnswer, Quiz } from "../features/quiz";
 import { useKeyPressEffect } from "../hooks/useKeyPressEffect";
 import Head from 'next/head'
+import Link from "next/link";
 
 const SWIPE_DIRECTION = {
   LEFT,
@@ -234,9 +235,9 @@ export default function QuestionsPage() {
         </div>
       </div>
       <hr></hr>
-      <a href="/">
+      <Link href="/">
         <p>ホーム</p>
-      </a>
+      </Link>
     </>
   );
 }
