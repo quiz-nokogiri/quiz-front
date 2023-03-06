@@ -233,6 +233,10 @@ export default function QuestionsPage() {
           </main>
         </div>
       </div>
+      <hr></hr>
+      <a href="/">
+        <p>ホーム</p>
+      </a>
     </>
   );
 }
