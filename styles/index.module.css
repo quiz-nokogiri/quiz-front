@@ -1,0 +1,27 @@
+.whole {
+  /* height: 100vh; */
+  position: relative;
+}
+
+.theme {
+  margin: 0;
+  text-align: center;
+  font-size: 45px;
+}
+
+.start {
+  display: flex;
+  position: fixed;
+  inset: 0;
+}
+
+.bo {
+  display: block;
+  margin: auto;
+  padding: 1rem 1rem;
+  font-weight: bold;
+  border: 4px solid #000;
+  color: #000;
+  font-size: 25px;
+  border-radius: 1rem;
+}

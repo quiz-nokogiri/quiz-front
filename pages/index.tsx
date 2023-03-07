@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import Head from 'next/head'
-import styles from "../styles/Home.module.css";
+import styles from "../styles/index.module.css"
 
 export default function RootPage() {
   return (
@@ -12,14 +12,12 @@ export default function RootPage() {
         <meta name="keywords" content="クイズ,無限,暇つぶし,スマートフォン,スマホ,UnlimitedQuiz,無限クイズ" />
         <title>UnlimitedQuiz</title>
       </Head>
-      <div>
-        <h1 className={styles.theme}>
-          UnlimitedQuiz
-        </h1>
-        <div className={styles.whole}>
-          <div className={styles.start}>
-            <Link href="/quizzes" className={styles.bo}>START</Link>
-          </div>
+      <h1 className={styles.theme}>
+        UnlimitedQuiz
+      </h1>
+      <div className={styles.whole}>
+        <div className={styles.start}>
+          <Link href="/quizzes" className={styles.bo}>START</Link>
         </div>
       </div>
     </>

@@ -1,4 +1,4 @@
-import styles from "../styles/Home.module.css";
+import styles from "../styles/quizzes.module.css"
 import { useEffect, useMemo, useReducer, useState } from "react";
 import { useSwipeable, LEFT, RIGHT, UP, DOWN } from "react-swipeable";
 import { fetchQuiz, judgeAnswer, Quiz } from "../features/quiz";

@@ -1,31 +1,3 @@
-.whole {
-  /* height: 100vh; */
-  position: relative;
-}
-
-.theme {
-  margin: 0;
-  text-align: center;
-  font-size: 45px;
-}
-
-.start {
-  display: flex;
-  position: fixed;
-  inset: 0;
-}
-
-.bo {
-  display: block;
-  margin: auto;
-  padding: 1rem 1rem;
-  font-weight: bold;
-  border: 4px solid #000;
-  color: #000;
-  font-size: 25px;
-  border-radius: 1rem;
-}
-
 .entire{
   height: 100vh;
   background: #eee;
@@ -64,7 +36,8 @@
 }
 
 /* フッター */
-/* ------------------ */
+/* 参照:https://asbgm.com/332/ */
+/* アイコンの引用:https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css */
 /* メニューをページ下部に固定 */
 .fixed_footer_menu {
   position: fixed;
