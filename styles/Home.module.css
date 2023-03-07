@@ -28,6 +28,7 @@
 
 .entire{
   height: 100vh;
+  background: #eee;
 }
 
 .main {
@@ -42,7 +43,7 @@
   margin: 0;
   line-height: 1.15;
   font-size: 2rem;
-  background: linear-gradient(#67a7cc, #c0c0c0);
+  background: linear-gradient(#fc9803, #c0c0c0);
   text-align: center;
 }
 
@@ -50,10 +51,6 @@
   font-size: 45px;
   margin-top: 0;
   margin-bottom: 0;
-}
-
-.que {
-  margin: 0;
 }
 
 .hako {
@@ -64,4 +61,55 @@
 .choice {
   width: 40%;
   word-wrap: break-word;
+}
+
+/* フッター */
+/* ------------------ */
+/* メニューをページ下部に固定 */
+.fixed_footer_menu {
+  position: fixed;
+  width: 100%;
+  bottom: 0px;
+  opacity: 1;
+  z-index: 100;
+}
+
+/* メニューを横並びにする */
+.fixed_footer_menu ul {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  background: #fff;
+}
+
+/* メニューの要素 */
+.fixed_footer_menu li {
+  justify-content: center;
+  align-items: center;
+  width: 100%; /* 要素が5つの場合20%（100/5） */
+  padding: 0;
+  margin: 0;
+}
+
+/* メニューのボタン */
+.fixed_footer_menu li a {
+  color: #333;
+  text-align: center;
+  display: block;
+  width: 100%;
+  padding: 10px 0px 0px 0px;
+  font-size: 8px;
+  text-decoration: none;
+}
+
+/* メニュータイトル */
+.fixed_footer_menu li p {
+  font-size: 8px; /* メニュータイトルのフォントサイズ */
+}
+
+/* アイコンのサイズを調整 */
+.footer-icon {
+  font-size: 20px;
 }

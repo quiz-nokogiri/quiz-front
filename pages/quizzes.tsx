@@ -47,15 +47,15 @@ const useQuestionsPage = () => {
     dispatchCurrentQuizNumber({ type: "increment" });
     setDisplayState(DisplayState.THINKING);
     addQuizzesByFetching();
-    // history.replaceState(null, 'quiz page', 'http://localhost:3000/quizzes/' + quizzes[currentQuizNumber].id);
-    history.replaceState(null, 'quiz page', 'https://unlimitedquiz.com/quizzes/' + quizzes[currentQuizNumber].id);
+    history.replaceState(null, 'quiz page', 'http://localhost:3000/quizzes/' + quizzes[currentQuizNumber].id);
+    // history.replaceState(null, 'quiz page', 'https://unlimitedquiz.com/quizzes/' + quizzes[currentQuizNumber].id);
   };
 
   const goPrev = () => {
     dispatchCurrentQuizNumber({ type: "decrement" });
     setDisplayState(DisplayState.THINKING);
-    // history.replaceState(null, 'quiz page', 'http://localhost:3000/quizzes/' + quizzes[currentQuizNumber].id);
-    history.replaceState(null, 'quiz page', 'https://unlimitedquiz.com/quizzes/' + quizzes[currentQuizNumber].id);
+    history.replaceState(null, 'quiz page', 'http://localhost:3000/quizzes/' + quizzes[currentQuizNumber].id);
+    // history.replaceState(null, 'quiz page', 'https://unlimitedquiz.com/quizzes/' + quizzes[currentQuizNumber].id);
   };
 
   const displayQuiz = useMemo<Quiz | undefined>(
@@ -192,6 +192,7 @@ export default function QuestionsPage() {
   return (
     <>
       <Head>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossOrigin="anonymous" referrerPolicy="no-referrer" />
         <title>UnlimitedQuiz</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="description" content="UnlimitedQuiz　無限クイズ 　- ワクワクする人生に。クイズを楽しみ、暇つぶししながら知識、好奇心を手に入れましょう。" />
@@ -234,10 +235,16 @@ export default function QuestionsPage() {
           </main>
         </div>
       </div>
-      <hr></hr>
-      <Link href="/">
-        <p>ホーム</p>
-      </Link>
+      <div className={styles.fixed_footer_menu}>
+        <ul>
+          <li>
+            <Link href="./">
+              <i className="fa-solid fa-house footer-icon"></i>
+              <p>Home</p>
+            </Link>
+          </li>
+        </ul>
+      </div>
     </>
   );
 }
