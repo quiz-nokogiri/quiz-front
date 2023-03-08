@@ -47,15 +47,15 @@ const useQuestionsPage = () => {
     dispatchCurrentQuizNumber({ type: "increment" });
     setDisplayState(DisplayState.THINKING);
     addQuizzesByFetching();
-    // history.replaceState(null, 'quiz page', 'http://localhost:3000/quizzes/' + quizzes[currentQuizNumber].id);
-    history.replaceState(null, 'quiz page', 'https://unlimitedquiz.com/quizzes/' + quizzes[currentQuizNumber].id);
+    history.replaceState(null, 'quiz page', 'http://localhost:3000/quizzes/' + quizzes[currentQuizNumber].id);
+    // history.replaceState(null, 'quiz page', 'https://unlimitedquiz.com/quizzes/' + quizzes[currentQuizNumber].id);
   };
 
   const goPrev = () => {
     dispatchCurrentQuizNumber({ type: "decrement" });
     setDisplayState(DisplayState.THINKING);
-    // history.replaceState(null, 'quiz page', 'http://localhost:3000/quizzes/' + quizzes[currentQuizNumber].id);
-    history.replaceState(null, 'quiz page', 'https://unlimitedquiz.com/quizzes/' + quizzes[currentQuizNumber].id);
+    history.replaceState(null, 'quiz page', 'http://localhost:3000/quizzes/' + quizzes[currentQuizNumber].id);
+    // history.replaceState(null, 'quiz page', 'https://unlimitedquiz.com/quizzes/' + quizzes[currentQuizNumber].id);
   };
 
   const displayQuiz = useMemo<Quiz | undefined>(
@@ -239,7 +239,9 @@ export default function QuestionsPage() {
         <ul>
           <li>
             <Link href="./">
-              <i className="fa-solid fa-house footer-icon"></i>
+              <div className={styles.footer_icon}>
+                <i className="fa-solid fa-house"></i>
+              </div>
               <p>Home</p>
             </Link>
           </li>
