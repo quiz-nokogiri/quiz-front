@@ -1,10 +1,22 @@
+import { useSwipeable } from "react-swipeable";
 import Link from 'next/link'
 import Head from 'next/head'
 import styles from "../styles/index.module.css"
 
 export default function RootPage() {
+  const handlers = useSwipeable({
+    onSwiped: (event) => {
+        console.log(event);
+        if (event.dir == "Up") {
+          window.location.href = "/quizzes"
+        }
+    },
+    trackMouse: true, //マウス操作でのスワイプを許可する場合はtrue
+  });
+  
   return (
     <>
+    <div {...handlers}>
       <Head>
         <title>UnlimitedQuiz</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -24,6 +36,7 @@ export default function RootPage() {
           <Link href="/quizzes" className={styles.bo}>START</Link>
         </div>
       </div>
+    </div>
     </>
   );
 };
