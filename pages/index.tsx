@@ -18,6 +18,7 @@ export default function RootPage() {
     <>
       <Head>
         <title>UnlimitedQuiz</title>
+        <meta charSet="UTF-8" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossOrigin="anonymous" referrerPolicy="no-referrer" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta property="og:site_name" content="UnlimitedQuiz" />
