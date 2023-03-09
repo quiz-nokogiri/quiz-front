@@ -1,7 +1,7 @@
 import styles from "../styles/quizzes.module.css"
 import { useEffect, useMemo, useReducer, useState } from "react";
 import { useSwipeable, LEFT, RIGHT, UP, DOWN } from "react-swipeable";
-import { fetchQuiz, judgeAnswer, Quiz } from "../features/quiz";
+import { fetchQuiz, judgeAnswer, Quiz, setCorrect } from "../features/quiz";
 import { useKeyPressEffect } from "../hooks/useKeyPressEffect";
 import Head from 'next/head'
 import Link from "next/link";
@@ -217,6 +217,7 @@ export default function QuestionsPage() {
                       {displayQuiz.question}
                       {displayState === DisplayState.SUCCESS && <p>正解!!</p>}
                       {displayState === DisplayState.MISSING && <p>不正解</p>}
+                      {displayState !== DisplayState.THINKING && (<p>A.{setCorrect(displayQuiz)}</p>)}
                     </h1>
                     {displayState === DisplayState.THINKING ? (
                       <div className={styles.hako}>

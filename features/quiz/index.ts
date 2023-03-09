@@ -20,3 +20,11 @@ export const judgeAnswer = (quiz: Quiz, answer: 1 | 2) => {
     return quiz.correct === 2;
   }
 };
+
+export const setCorrect = (data: Quiz) => {
+  if (data.correct === 1) {
+    return data.answer1;
+  } else {
+    return data.answer2;
+  }
+};
