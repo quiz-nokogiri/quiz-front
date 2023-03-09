@@ -86,3 +86,103 @@
 .footer_icon {
   font-size: 20px;
 }
+
+/* 解答後画面 */
+.scrolldown {
+  position: absolute;
+  bottom: 100px;
+  left: 50%;
+}
+
+.scrolldown span {
+  position: absolute;
+  left: 10px;
+  bottom: 40px;
+  color: #c0c0c0;
+  font-size: 1rem;
+  letter-spacing: 0.05em;
+}
+
+.scrolldown:before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: -4px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #c0c0c0;
+  animation:
+    circlemove 1s ease-in-out infinite,
+    cirlemovehide 1s ease-out infinite;
+}
+
+@keyframes circlemove {
+  100% {
+    bottom: 95px;
+  }
+
+  0% {
+    bottom: -5px;
+  }
+}
+
+.scrolldown:after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 2px;
+  height: 100px;
+  background: #c0c0c0;
+}
+
+/* 問題表示画面 */
+.scrollbeside {
+  position: absolute;
+  bottom: 100px;
+  left: 50%;
+}
+
+.scrollbeside span {
+  position: absolute;
+  left: -15px;
+  bottom: 60px;
+  color: #c0c0c0;
+  font-size: 1rem;
+  letter-spacing: 0.05em;
+}
+
+.scrollbeside:before {
+  content: "";
+  position: absolute;
+  bottom: 45px;
+  left: -4px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #c0c0c0;
+  animation:
+    circlemove1 0.5s linear infinite;
+  animation-direction: alternate;
+}
+
+@keyframes circlemove1 {
+  0% {
+    left: -50px;
+  }
+
+  100% {
+    left: 50px;
+  }
+}
+
+.scrollbeside:after {
+  content: "";
+  position: absolute;
+  bottom: 50px;
+  left: -45px;
+  width: 100px;
+  height: 2px;
+  background: #c0c0c0;
+}

@@ -227,9 +227,13 @@ export default function QuestionsPage() {
                         <h2 onClick={handleAnswer2Click} className={styles.choice}>
                           {displayQuiz.answer2}→
                         </h2>
+                        <div className={styles.scrollbeside}><span>Swipe</span></div>
                       </div>
                     ) : (
+                      <>
                       <h2 onClick={handleNextClick}>next Quiz ↑</h2>
+                      <div className={styles.scrolldown}><span>Swipe</span></div>
+                      </>
                     )}
                   </div>
                 </div>
