@@ -29,13 +29,15 @@ export default function RootPage() {
         <h1 className={styles.title}>
           UnlimitedQuiz
         </h1>
-        <h2>
-          全ての操作がスワイプで操作が行えます。<br />
-          上にスワイプしてクイズSTART！
-        </h2>
         <div className={styles.whole}>
           <div className={styles.start}>
-            <Link href="/quizzes" className={styles.bo}>START</Link>
+            <div className={styles.bo}>
+              <h3>
+                問題は無限に続きます。<br/>
+                全ての操作がスワイプで操作が行えます。<br />
+                上にスワイプしてクイズSTART！
+              </h3>
+            </div>
           </div>
         </div>
       </div>
