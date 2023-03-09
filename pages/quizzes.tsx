@@ -199,6 +199,7 @@ export default function QuestionsPage() {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="description" content="UnlimitedQuiz　無限クイズ 　- ワクワクする人生に。クイズを楽しみ、暇つぶししながら知識、好奇心を手に入れましょう。" />
         <meta name="keywords" content="クイズ,無限,暇つぶし,スマートフォン,スマホ,UnlimitedQuiz,無限クイズ" />
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3470251284651477"crossOrigin="anonymous"></script>
       </Head>
       <div {...bind} className={styles.entire}>
         <div className={styles.container}>
