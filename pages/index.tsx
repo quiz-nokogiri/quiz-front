@@ -34,7 +34,7 @@ export default function RootPage() {
             <div className={styles.bo}>
               <h3>
                 問題は無限に続きます。<br/>
-                全ての操作がスワイプで操作が行えます。<br />
+                全ての操作がスワイプで行えます。<br />
                 上にスワイプしてクイズSTART！
               </h3>
             </div>

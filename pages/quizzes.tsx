@@ -190,7 +190,7 @@ export default function QuestionsPage() {
   };
 
   return (
-    <>
+    <div className={styles.fixed_display}>
       <Head>
         <title>UnlimitedQuiz</title>
         <meta charSet="UTF-8" />
@@ -254,6 +254,6 @@ export default function QuestionsPage() {
           </li>
         </ul>
       </div>
-    </>
+    </div>
   );
 }
