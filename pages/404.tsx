@@ -3,7 +3,7 @@ import { useEffect } from "react";
 export default function Custom404() {
   const redirect = () => {
     sessionStorage.setItem('path', location.pathname);
-    // location.replace('./');
+    location.replace('./');
   };
   useEffect(() => {
     redirect();
