@@ -100,19 +100,19 @@ const useQuestionsPage = () => {
   });
 
   useKeyPressEffect(
-    "ArrowLeft",
+    "ArrowRight",
     () => {
-    if (displayState !== DisplayState.THINKING || !displayQuiz) {
-      return;
-    }
-    const result = judgeAnswer(displayQuiz, 2);
-    setDisplayState(result ? DisplayState.SUCCESS : DisplayState.MISSING);
-  },
-  [displayState, displayQuiz]
-);
+      if (displayState !== DisplayState.THINKING || !displayQuiz) {
+        return;
+      }
+      const result = judgeAnswer(displayQuiz, 2);
+      setDisplayState(result ? DisplayState.SUCCESS : DisplayState.MISSING);
+    },
+    [displayState, displayQuiz]
+  );
     
   useKeyPressEffect(
-    "ArrowRight",
+    "ArrowLeft",
     () => {
       if (displayState == DisplayState.THINKING && displayQuiz) {
         const result = judgeAnswer(displayQuiz, 1);
@@ -125,15 +125,15 @@ const useQuestionsPage = () => {
   );
 
   useKeyPressEffect(
-    "ArrowDown",
+    "ArrowUp",
     () => {
       goPrev();
     },
     [displayState, goPrev]
-  );
-  
-  useKeyPressEffect(
-    "ArrowUp",
+    );
+    
+    useKeyPressEffect(
+    "ArrowDown",
     () => {
       goNext();
     },
