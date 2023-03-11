@@ -40,6 +40,14 @@
   word-wrap: break-word;
 }
 
+.correct {
+  color: #ff0000;
+}
+
+.incorrect {
+  color: #0000ff;
+}
+
 /* フッター */
 /* 参照:https://asbgm.com/332/ */
 /* アイコンの引用:https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css */
