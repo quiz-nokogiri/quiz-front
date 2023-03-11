@@ -71,11 +71,11 @@ const useQuestionsPage = () => {
       }
       if (displayState === DisplayState.THINKING) {
         if (event.dir == SWIPE_DIRECTION.LEFT && displayQuiz) {
-          const result = judgeAnswer(displayQuiz, 1);
+          const result = judgeAnswer(displayQuiz, 2);
           setDisplayState(result ? DisplayState.SUCCESS : DisplayState.MISSING);
         }
         if (event.dir == SWIPE_DIRECTION.RIGHT && displayQuiz) {
-          const result = judgeAnswer(displayQuiz, 2);
+          const result = judgeAnswer(displayQuiz, 1);
           setDisplayState(result ? DisplayState.SUCCESS : DisplayState.MISSING);
         }
         if (event.dir == SWIPE_DIRECTION.UP) {
@@ -102,6 +102,18 @@ const useQuestionsPage = () => {
   useKeyPressEffect(
     "ArrowLeft",
     () => {
+    if (displayState !== DisplayState.THINKING || !displayQuiz) {
+      return;
+    }
+    const result = judgeAnswer(displayQuiz, 2);
+    setDisplayState(result ? DisplayState.SUCCESS : DisplayState.MISSING);
+  },
+  [displayState, displayQuiz]
+);
+    
+  useKeyPressEffect(
+    "ArrowRight",
+    () => {
       if (displayState == DisplayState.THINKING && displayQuiz) {
         const result = judgeAnswer(displayQuiz, 1);
         setDisplayState(result ? DisplayState.SUCCESS : DisplayState.MISSING);
@@ -113,33 +125,21 @@ const useQuestionsPage = () => {
   );
 
   useKeyPressEffect(
-    "ArrowRight",
-    () => {
-      if (displayState !== DisplayState.THINKING || !displayQuiz) {
-        return;
-      }
-      const result = judgeAnswer(displayQuiz, 2);
-      setDisplayState(result ? DisplayState.SUCCESS : DisplayState.MISSING);
-    },
-    [displayState, displayQuiz]
-  );
-
-  useKeyPressEffect(
-    "ArrowUp",
+    "ArrowDown",
     () => {
       goPrev();
     },
     [displayState, goPrev]
   );
-
+  
   useKeyPressEffect(
-    "ArrowDown",
+    "ArrowUp",
     () => {
       goNext();
     },
     [displayState, goNext]
   );
-
+    
   useEffect(() => {
     // NOTE: 次の問題を表示する時のローディング時間を短縮するために, 一つ先の問題を取得しておく
     addQuizzesByFetching();
@@ -212,10 +212,10 @@ export default function QuestionsPage() {
                     {displayState === DisplayState.THINKING ? (
                       <div className={styles.hako}>
                         <h2 onClick={handleAnswer1Click} className={styles.choice}>
-                          ←{displayQuiz.answer1}
+                          →{displayQuiz.answer1}
                         </h2>
                         <h2 onClick={handleAnswer2Click} className={styles.choice}>
-                          {displayQuiz.answer2}→
+                          {displayQuiz.answer2}←
                         </h2>
                         {/* <div className={styles.scrollbeside}><span>Swipe</span></div> */}
                       </div>
