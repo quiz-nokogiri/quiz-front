@@ -212,17 +212,17 @@ export default function QuestionsPage() {
                     {displayState === DisplayState.THINKING ? (
                       <div className={styles.hako}>
                         <h2 onClick={handleAnswer1Click} className={styles.choice}>
-                          →{displayQuiz.answer1}
+                          {displayQuiz.answer1}
                         </h2>
                         <h2 onClick={handleAnswer2Click} className={styles.choice}>
-                          {displayQuiz.answer2}←
+                          {displayQuiz.answer2}
                         </h2>
-                        {/* <div className={styles.scrollbeside}><span>Swipe</span></div> */}
+                        <div className={styles.scrollbeside}><span>Swipe</span></div>
                       </div>
                     ) : (
                       <>
-                      <h2 onClick={handleNextClick}>next Quiz ↑</h2>
-                      {/* <div className={styles.scrolldown}><span>Swipe</span></div> */}
+                      <h2 onClick={handleNextClick}>next Quiz</h2>
+                      <div className={styles.scrolldown}><span>Swipe</span></div>
                       </>
                     )}
                   </div>
