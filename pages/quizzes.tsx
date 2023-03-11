@@ -205,7 +205,7 @@ export default function QuestionsPage() {
                   <div className={styles.box}>
                     <h1>
                       {displayQuiz.question}
-                      {displayState !== DisplayState.THINKING && (<p>A.{setCorrect(displayQuiz)}</p>)}
+                      {displayState !== DisplayState.THINKING && (<p>答え {setCorrect(displayQuiz)}</p>)}
                       {displayState === DisplayState.SUCCESS && <div className={styles.correct}><p>正解!!</p></div>}
                       {displayState === DisplayState.MISSING && <div className={styles.incorrect}><p>不正解</p></div>}
                     </h1>
