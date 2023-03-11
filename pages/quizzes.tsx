@@ -71,11 +71,11 @@ const useQuestionsPage = () => {
       }
       if (displayState === DisplayState.THINKING) {
         if (event.dir == SWIPE_DIRECTION.LEFT && displayQuiz) {
-          const result = judgeAnswer(displayQuiz, 2);
+          const result = judgeAnswer(displayQuiz, 1);
           setDisplayState(result ? DisplayState.SUCCESS : DisplayState.MISSING);
         }
         if (event.dir == SWIPE_DIRECTION.RIGHT && displayQuiz) {
-          const result = judgeAnswer(displayQuiz, 1);
+          const result = judgeAnswer(displayQuiz, 2);
           setDisplayState(result ? DisplayState.SUCCESS : DisplayState.MISSING);
         }
         if (event.dir == SWIPE_DIRECTION.UP) {
