@@ -36,7 +36,14 @@ const useQuestionsPage = () => {
       }
     },
     0
-  );
+    );
+
+    // url変更
+    try {
+      // history.replaceState(null, 'quiz page', 'http://localhost:3000/quizzes/' + quizzes[currentQuizNumber].id);
+      history.replaceState(null, 'quiz page', 'https://unlimitedquiz.com/quizzes/' + quizzes[currentQuizNumber].id);
+    }catch (e) {
+    }
 
   const [displayState, setDisplayState] = useState<DisplayState>(
     DisplayState.THINKING,
@@ -46,15 +53,11 @@ const useQuestionsPage = () => {
     dispatchCurrentQuizNumber({ type: "increment" });
     setDisplayState(DisplayState.THINKING);
     addQuizzesByFetching();
-    // history.replaceState(null, 'quiz page', 'http://localhost:3000/quizzes/' + quizzes[currentQuizNumber].id);
-    history.replaceState(null, 'quiz page', 'https://unlimitedquiz.com/quizzes/' + quizzes[currentQuizNumber].id);
   };
 
   const goPrev = () => {
     dispatchCurrentQuizNumber({ type: "decrement" });
     setDisplayState(DisplayState.THINKING);
-    // history.replaceState(null, 'quiz page', 'http://localhost:3000/quizzes/' + quizzes[currentQuizNumber].id);
-    history.replaceState(null, 'quiz page', 'https://unlimitedquiz.com/quizzes/' + quizzes[currentQuizNumber].id);
   };
 
   const displayQuiz = useMemo<Quiz | undefined>(
